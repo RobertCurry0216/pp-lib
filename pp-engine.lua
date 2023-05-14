@@ -251,6 +251,14 @@ function math.sign(n)
 
 	return 0
 end
+
+function math.clamp(a, min, max)
+	if min > max then
+		min, max = max, min
+	end
+	return math.max(min, math.min(max, a))
+end
+
 -- source/enum.lua
 Group = {
   actor=32,
