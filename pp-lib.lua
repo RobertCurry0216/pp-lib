@@ -1,5 +1,3 @@
--- source/animatedImage.lua--------------------------------------------------
-import "CoreLibs/animation"
 
 local graphics <const> = playdate.graphics
 local animation <const> = playdate.graphics.animation
@@ -275,11 +273,12 @@ Side = {
   left=0x0010,
   right=0x0001,
 }
+<<<<<<< HEAD:pp-lib.lua
 
 -- source/inputHandlers.lua--------------------------------------------------
 class("InputBase").extends()
 
-function InputBase:init(actor)
+function InputHandler:init(actor)
   self._actor = actor
   self._jump_last_pressed = 0
   self._left = false
@@ -290,15 +289,11 @@ function InputBase:init(actor)
   self.jump_buffered = false
 end
 
-function InputBase:update() end
-
-class("InputDPadAndA").extends(InputBase)
-
-function InputDPadAndA:update()
-  self._left=playdate.buttonIsPressed(playdate.kButtonLeft)
-  self._right=playdate.buttonIsPressed(playdate.kButtonRight)
-  self.jump=playdate.buttonIsPressed(playdate.kButtonA)
-  self.jump_pressed=playdate.buttonJustPressed(playdate.kButtonA)
+function InputHandler:update(buttons)
+  self._left=playdate.buttonIsPressed(buttons.left)
+  self._right=playdate.buttonIsPressed(buttons.right)
+  self.jump=playdate.buttonIsPressed(buttons.jump)
+  self.jump_pressed=playdate.buttonJustPressed(buttons.jump)
 
   if self.jump_pressed then
     self._jump_last_pressed = playdate.getCurrentTimeMilliseconds()
@@ -310,6 +305,7 @@ function InputDPadAndA:update()
   self.dx = (self._right and 1 or 0) - (self._left and 1 or 0)
 end
 
+<<<<<<< HEAD:pp-lib.lua
 -- source/actor.lua--------------------------------------------------
 class("Actor").extends(playdate.graphics.sprite)
 
@@ -418,17 +414,21 @@ function BasePlatformer:init()
   -- state machine
   self.sm = Machine()
 
+  -- input handler
+  self.inputs = InputHandler(self)
+
   -- init state
   self._image_flip = playdate.graphics.kImageUnflipped
   self._acc = 0
   self._jump_count = 0
   self.dx = 0
   self.dy = 0
+  self.buttons = {}
   
 end
 
 function BasePlatformer:update()
-  self.inputs:update()
+  self.inputs:update(self.buttons)
   self.sm:current():update(self.inputs)
   self:move()
 
@@ -494,7 +494,7 @@ end
 
 class("DefaultPlatformer").extends(BasePlatformer)
 
-function DefaultPlatformer:init(images, options, handler)
+function DefaultPlatformer:init(images, options)
   assert(images.idle, "pp-engine error - Images for 'idle' not found")
   assert(images.run, "pp-engine error - Images for 'run' not found")
   assert(images.jump, "pp-engine error - Images for 'jump' not found")
@@ -502,6 +502,12 @@ function DefaultPlatformer:init(images, options, handler)
   options = options or {}
 
   DefaultPlatformer.super.init(self)
+
+  self.buttons = {
+    left=playdate.kButtonLeft,
+    right=playdate.kButtonRight,
+    jump=playdate.kButtonA
+  }
 
   local machine = self.sm
   machine:addState("idle", IdleState(self, images.idle, options.idle))
@@ -541,9 +547,6 @@ function DefaultPlatformer:init(images, options, handler)
   self.fall_hang_time = 100
   self.fall_max = 400
   self.coyote_time = 120
-
-  -- inputs
-  self.inputs = handler and handler(self) or InputDPadAndA(self)
 end
 
 -- source/states/baseState.lua--------------------------------------------------

@@ -24,7 +24,7 @@ end
 
 class("DefaultPlatformer").extends(BasePlatformer)
 
-function DefaultPlatformer:init(images, options, handler)
+function DefaultPlatformer:init(images, options)
   assert(images.idle, "pp-engine error - Images for 'idle' not found")
   assert(images.run, "pp-engine error - Images for 'run' not found")
   assert(images.jump, "pp-engine error - Images for 'jump' not found")
@@ -32,6 +32,12 @@ function DefaultPlatformer:init(images, options, handler)
   options = options or {}
 
   DefaultPlatformer.super.init(self)
+
+  self.buttons = {
+    left=playdate.kButtonLeft,
+    right=playdate.kButtonRight,
+    jump=playdate.kButtonA
+  }
 
   local machine = self.sm
   machine:addState("idle", IdleState(self, images.idle, options.idle))
@@ -71,7 +77,4 @@ function DefaultPlatformer:init(images, options, handler)
   self.fall_hang_time = 100
   self.fall_max = 400
   self.coyote_time = 120
-
-  -- inputs
-  self.inputs = handler and handler(self) or InputDPadAndA(self)
 end

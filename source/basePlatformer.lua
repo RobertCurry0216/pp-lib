@@ -14,17 +14,21 @@ function BasePlatformer:init()
   -- state machine
   self.sm = Machine()
 
+  -- input handler
+  self.inputs = InputHandler()
+
   -- init state
   self._image_flip = playdate.graphics.kImageUnflipped
   self._acc = 0
   self._jump_count = 0
   self.dx = 0
   self.dy = 0
+  self.buttons = {}
   
 end
 
 function BasePlatformer:update()
-  self.inputs:update()
+  self.inputs:update(self, self.buttons)
   self.sm:current():update(self.inputs)
   self:move()
 
