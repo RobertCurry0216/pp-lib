@@ -16,7 +16,6 @@ def concatenate_files(input_file, output_file):
                 output.write("\n")
 
 
-# Usage example
 input_file = "./source/pp-engine.lua"  # Path to the file containing list of file paths
 output_file = "./pp-engine.lua"  # Path to the output file
 
