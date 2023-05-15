@@ -21,7 +21,7 @@ function InputHandler:update(buttons, actor)
   end
 
   local time_since_jump = playdate.getCurrentTimeMilliseconds() - self._jump_last_pressed
-  self.jump_buffered = time_since_jump < self._actor.jump_buffer_time
+  self.jump_buffered = time_since_jump < actor.jump_buffer_time
 
   self.dx = (self._right and 1 or 0) - (self._left and 1 or 0)
 end

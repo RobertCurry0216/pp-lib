@@ -25,10 +25,10 @@ end
 class("DefaultPlatformer").extends(BasePlatformer)
 
 function DefaultPlatformer:init(images, options)
-  assert(images.idle, "pp-engine error - Images for 'idle' not found")
-  assert(images.run, "pp-engine error - Images for 'run' not found")
-  assert(images.jump, "pp-engine error - Images for 'jump' not found")
-  assert(images.fall, "pp-engine error - Images for 'fall' not found")
+  assert(images.idle, "pp-lib error - Images for 'idle' not found")
+  assert(images.run, "pp-lib error - Images for 'run' not found")
+  assert(images.jump, "pp-lib error - Images for 'jump' not found")
+  assert(images.fall, "pp-lib error - Images for 'fall' not found")
   options = options or {}
 
   DefaultPlatformer.super.init(self)

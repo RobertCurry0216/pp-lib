@@ -28,7 +28,7 @@ function BasePlatformer:init()
 end
 
 function BasePlatformer:update()
-  self.inputs:update(self.buttons, actor)
+  self.inputs:update(self.buttons, self)
   self.sm:current():update(self.inputs)
   self:move()
   self:updateImageFlip()

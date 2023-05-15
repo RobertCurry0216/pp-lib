@@ -2,9 +2,72 @@
 
 The Playdate-Platformer Library is a library to make creating a platformer game for the playdate easy, while including all the things that make jumping feel good.
 
-# Quick start
+# Install
 
-# Adding new states
+copy `pp-lib.lua` into your game directory and import it into your game, `import "pp-lib"`
+
+# Quick Start
+
+```
+import "CoreLibs/object"
+import "CoreLibs/graphics"
+import "CoreLibs/sprites"
+import "pp-lib"
+
+local pd <const> = playdate
+local gfx <const> = pd.graphics
+
+-- Player class
+class("Player").extends(DefaultPlatformer)
+
+local player_img = gfx.image.new(32, 32)
+gfx.pushContext(player_img)
+	gfx.fillRect(0, 0, 32, 32)
+gfx.popContext(player_img)
+
+function Player:init(x, y)
+	Player.super.init(self, {idle=player_img, run=player_img, jump=player_img, fall=player_img})
+	self:setCollideRect(0,0, player_img:getSize())
+	self:moveTo(x, y)
+end
+
+-- Block class
+
+class("Block").extends(Solid)
+local block_img = gfx.image.new(16,16)
+gfx.pushContext(block_img)
+	gfx.fillRect(0, 0, 16, 16)
+gfx.popContext(block_img)
+
+function Block:init(x, y)
+	Block.super.init(self)
+	self:setImage(block_img)
+	self:setCollideRect(0,0, block_img:getSize())
+	self:moveTo(x, y)
+end
+
+-- set up game
+Player(50, 50)
+
+-- blocks
+for i=1,12,1 do
+	Block(8+(i-1)*16, 80)
+end
+for i=1,12,1 do
+	Block(392-(i-1)*16, 160)
+end
+
+-- walls
+Solid.addEmptyCollisionSprite(0, -10, 400, 10)
+Solid.addEmptyCollisionSprite(0, 240, 400, 10)
+Solid.addEmptyCollisionSprite(-10, 0, 10, 240)
+Solid.addEmptyCollisionSprite(400, 0, 10, 240)
+
+function playdate.update()
+	gfx.sprite.update()
+end
+
+```
 
 # API
 
@@ -114,113 +177,40 @@ buttons is a table containing the key to be used to control the player
 - `jump`: button to jump
   - default `playdate.kButtonA`
 
-### `DefaultPlatformer.has_air_control`
+### `DefaultPlatformer` properties
 
-- determins if player can be controlled while in the air
-- default `true`
+Heres all the different properties that can be tweaked to make your platformer
 
-### `DefaultPlatformer.has_ground_control`
+```lua
 
-- determins if player can be controlled while on the ground
-- default `true`
+self.has_air_control = true -- determins if player can be controlled while in the air
+self.has_ground_control = true -- determins if player can be controlled while on the ground
 
-### `DefaultPlatformer.run_speed_max`
+self.run_speed_max = 200 -- maximum ground speed, in px/s
+self.run_speed_acc = 20 -- acceleration speed when the player starts moving while on the ground, in px/s
+self.run_speed_dcc = 40 -- deceleration speed when the player stops moving while on the ground
 
-- maximum ground speed, in px/s
-- default `200`
+self.air_speed_max = 200 -- maximum horizontal air speed, in px/s
+self.air_speed_acc = 20 -- horizontal acceleration speed when the player starts moving while on the air, in px/s
+self.air_speed_dcc = 4 -- horizontal deceleration speed when the player stops moving while on the air, in px/s
+self.jump_boost = 400 -- initial vertical speed when the player jumps, in px/s
+self.jump_dcc = 20 -- the gravity applied while the player is jumping, in px/s
+self.jump_max_time = 300 -- the maximum time the player can be accending, in ms
+                         -- if, due to `jump_dcc`, the players vertical speed reaches 0 before this time, they will enter the fall state before this time
+self.jump_min_time = 120 -- the minimum time the player can be accending, in ms
+self.jump_count_max = 1 -- how many times the player can jump without touching the ground
+self.jump_buffer_time = 300 -- how long should jump inputs be buffered, in ms
+self.apex_boost = 10 -- a small vertical boost when the player goes from the `JumpState` into the `FallState` to smooth out the arc, in px/s
+self.bump_max = 6 -- the maxium distand the player can be bumped, in px
+                  -- if the player hits the edge of a block while jumping, this allows them to be pushed aside and continue the jump
 
-### `DefaultPlatformer.run_speed_acc`
+self.fall_acc = 30 -- the gravity applied when the player is falling, in px/s
+self.fall_hang_acc = 20 -- a reduced gravity applied at the apex of a jump to allow for more precision platforming, in px/s
+self.fall_hang_time = 100 -- the time the reduced gravity is applied for, is ms
+self.fall_max = 400 -- the maximum fall speed, in px/s
+self.coyote_time = 120 -- the amount of time after the player walks off a platform where the jump button will still work, in ms
 
-- acceleration speed when the player starts moving while on the ground, in px/s
-- default `20`
-
-### `DefaultPlatformer.run_speed_dcc`
-
-- deceleration speed when the player stops moving while on the ground
-- default `40`
-
-### `DefaultPlatformer.air_speed_max`
-
-- maximum horizontal air speed, in px/s
-- default `200`
-
-### `DefaultPlatformer.air_speed_acc`
-
-- horizontal acceleration speed when the player starts moving while on the air, in px/s
-- default `20`
-
-### `DefaultPlatformer.air_speed_dcc`
-
-- horizontal deceleration speed when the player stops moving while on the air, in px/s
-- default `4`
-
-### `DefaultPlatformer.jump_boost`
-
-- initial vertical speed when the player jumps, in px/s
-- default `400`
-
-### `DefaultPlatformer.jump_dcc`
-
-- the gravity applied while the player is jumping, in px/s
-- default `20`
-
-### `DefaultPlatformer.jump_max_time`
-
-- the maximum time the player can be accending, in ms
-- if, due to `jump_scc`, the players vertical speed reaches 0 before this time, they will enter the fall state before this time
-- default `300`
-
-### `DefaultPlatformer.jump_min_time`
-
-- the minimum time the player can be accending, in ms
-- default `120`
-
-### `DefaultPlatformer.jump_count_max`
-
-- how many times the player can jump without touching the groud
-- default `1`
-
-### `DefaultPlatformer.jump_buffer_time`
-
-- how long should buffered jump inputs be remembered, in ms
-- if the player hits jump slightly before hitting the ground this will allow the to still jump
-- default `300`
-
-### `DefaultPlatformer.apex_boost`
-
-- a small vertical boost when the player goes from the `JumpState` into the `FallState` to smooth out the arc, in px/s
-- default `10`
-
-### `DefaultPlatformer.bump_max`
-
-- if the player hits the edge of a block while jumping, this allows them to be pushed aside and continue the jump
-- the maxium distand the player can be bumped, in px
-- default `6`
-
-### `DefaultPlatformer.fall_acc`
-
-- the gravity applied when the player is falling, in px/s
-- default `30`
-
-### `DefaultPlatformer.fall_hang_acc`
-
-- a reduced gravity applied at the apex of a jump to allow for more precision platforming, in px/s
-- default `20`
-
-### `DefaultPlatformer.fall_hang_time`
-
-- the time the reduced gravity is applied for, is ms
-- default `100`
-
-### `DefaultPlatformer.fall_max`
-
-- the maximum fall speed, in px/s
-- default `400`
-
-### `DefaultPlatformer.coyote_time`
-
-- the amount of time after the player walks off a platform where the jump button will still work, in ms
-- default `120`
+```
 
 ---
 
