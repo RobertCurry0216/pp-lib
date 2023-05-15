@@ -28,10 +28,13 @@ function BasePlatformer:init()
 end
 
 function BasePlatformer:update()
-  self.inputs:update(self, self.buttons)
+  self.inputs:update(self.buttons, actor)
   self.sm:current():update(self.inputs)
   self:move()
+  self:updateImageFlip()
+end
 
+function BasePlatformer:updateImageFlip()
   -- set image flip
   if self.dx < 0 then
     self._image_flip = playdate.graphics.kImageFlippedX

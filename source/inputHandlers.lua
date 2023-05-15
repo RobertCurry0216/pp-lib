@@ -1,7 +1,6 @@
 class("InputHandler").extends()
 
-function InputHandler:init(actor)
-  self._actor = actor
+function InputHandler:init()
   self._jump_last_pressed = 0
   self._left = false
   self._right = false
@@ -11,7 +10,7 @@ function InputHandler:init(actor)
   self.jump_buffered = false
 end
 
-function InputHandler:update(buttons)
+function InputHandler:update(buttons, actor)
   self._left=playdate.buttonIsPressed(buttons.left)
   self._right=playdate.buttonIsPressed(buttons.right)
   self.jump=playdate.buttonIsPressed(buttons.jump)

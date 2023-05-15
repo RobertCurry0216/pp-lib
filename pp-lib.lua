@@ -1,3 +1,5 @@
+-- source/animatedImage.lua--------------------------------------------------
+import "CoreLibs/animation"
 
 local graphics <const> = playdate.graphics
 local animation <const> = playdate.graphics.animation
@@ -112,7 +114,6 @@ AnimatedImage.__index = function(animated_image, key)
 	end
 	return proxy_value
 end
-
 -- source/statemachine.lua--------------------------------------------------
 -- based on - https://github.com/kyleconroy/lua-state-machine
 
@@ -232,7 +233,6 @@ function Machine:get(name)
   return self.states[name]
 end
 
-
 -- source/utils.lua--------------------------------------------------
 function table.each( t, fn )
 	if not fn then return end
@@ -259,7 +259,6 @@ function math.clamp(a, min, max)
 	return math.max(min, math.min(max, a))
 end
 
-
 -- source/enum.lua--------------------------------------------------
 Group = {
   actor=32,
@@ -273,13 +272,10 @@ Side = {
   left=0x0010,
   right=0x0001,
 }
-<<<<<<< HEAD:pp-lib.lua
-
 -- source/inputHandlers.lua--------------------------------------------------
-class("InputBase").extends()
+class("InputHandler").extends()
 
-function InputHandler:init(actor)
-  self._actor = actor
+function InputHandler:init()
   self._jump_last_pressed = 0
   self._left = false
   self._right = false
@@ -289,7 +285,7 @@ function InputHandler:init(actor)
   self.jump_buffered = false
 end
 
-function InputHandler:update(buttons)
+function InputHandler:update(buttons, actor)
   self._left=playdate.buttonIsPressed(buttons.left)
   self._right=playdate.buttonIsPressed(buttons.right)
   self.jump=playdate.buttonIsPressed(buttons.jump)
@@ -305,7 +301,6 @@ function InputHandler:update(buttons)
   self.dx = (self._right and 1 or 0) - (self._left and 1 or 0)
 end
 
-<<<<<<< HEAD:pp-lib.lua
 -- source/actor.lua--------------------------------------------------
 class("Actor").extends(playdate.graphics.sprite)
 
@@ -317,7 +312,6 @@ end
 function Actor:destroy()
 	self:remove()
 end
-
 -- source/solid.lua--------------------------------------------------
 class("Solid").extends(Actor)
 
@@ -384,7 +378,6 @@ function Solid.addEmptyCollisionSprite(x, y, w, h)
   solid:setUpdatesEnabled(false)
   return solid
 end
-
 -- source/trigger.lua--------------------------------------------------
 class("Trigger").extends(Actor)
 
@@ -395,7 +388,6 @@ end
 
 
 function Trigger:perform() end
-
 
 -- source/basePlatformer.lua--------------------------------------------------
 class("BasePlatformer").extends(Actor)
@@ -415,7 +407,7 @@ function BasePlatformer:init()
   self.sm = Machine()
 
   -- input handler
-  self.inputs = InputHandler(self)
+  self.inputs = InputHandler()
 
   -- init state
   self._image_flip = playdate.graphics.kImageUnflipped
@@ -428,10 +420,13 @@ function BasePlatformer:init()
 end
 
 function BasePlatformer:update()
-  self.inputs:update(self.buttons)
+  self.inputs:update(self.buttons, actor)
   self.sm:current():update(self.inputs)
   self:move()
+  self:updateImageFlip()
+end
 
+function BasePlatformer:updateImageFlip()
   -- set image flip
   if self.dx < 0 then
     self._image_flip = playdate.graphics.kImageFlippedX
@@ -465,7 +460,6 @@ function BasePlatformer:move()
 end
 
 function BasePlatformer:aftermove(cols, l, tx, ty) end
-
 
 -- source/defaultPlatformer.lua--------------------------------------------------
 function defaultLandEvent(sm)
@@ -548,7 +542,6 @@ function DefaultPlatformer:init(images, options)
   self.fall_max = 400
   self.coyote_time = 120
 end
-
 -- source/states/baseState.lua--------------------------------------------------
 class("BaseState").extends(State)
 
@@ -581,7 +574,6 @@ function BaseState:update()
     self.actor:setImage(self.images:getImage())
   end
 end
-
 -- source/states/groundState.lua--------------------------------------------------
 class("GroundState").extends(BaseState)
 
@@ -625,7 +617,6 @@ function GroundState:aftermove()
     actor.sm:fall()
   end
 end
-
 
 
 
@@ -679,7 +670,6 @@ function AirState:aftermove(cols, l)
     end
   end)
 end
-
 -- source/states/idleState.lua--------------------------------------------------
 class("IdleState").extends(GroundState)
 
@@ -701,7 +691,6 @@ function IdleState:update(inputs)
     self.actor.sm:run()
   end
 end
-
 -- source/states/runState.lua--------------------------------------------------
 class("RunState").extends(GroundState)
 
@@ -722,7 +711,6 @@ function RunState:update(inputs)
     actor.dx = math.clamp(actor.dx, actor.run_speed_max, -actor.run_speed_max)
   end
 end
-
 -- source/states/jumpState.lua--------------------------------------------------
 class("JumpState").extends(AirState)
 
@@ -793,7 +781,6 @@ function JumpState:bump(actor, solid, tx, ty)
   return 0
 end
 
-
 -- source/states/fallState.lua--------------------------------------------------
 class("FallState").extends(AirState)
 
@@ -843,5 +830,4 @@ function FallState:aftermove(cols, l, tx, ty)
     end)
   end
 end
-
 
