@@ -13,7 +13,7 @@ def concatenate_files(input_file, output_file):
             with open(file_path, "r") as file:
                 output.write(f"-- {file_path}{'-'*50}\n")
                 output.write(file.read())
-                output.write("\n\n")
+                output.write("\n")
 
 
 input_file = "./source/pp-lib.lua"  # Path to the file containing list of file paths
