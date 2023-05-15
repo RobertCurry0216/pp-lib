@@ -8,7 +8,7 @@ copy `pp-lib.lua` into your game directory and import it into your game, `import
 
 # Quick Start
 
-```
+```lua
 import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
@@ -67,6 +67,40 @@ function playdate.update()
 	gfx.sprite.update()
 end
 
+```
+
+Here are all the available paramaters you can set on your platformer character
+
+```lua
+self.has_air_control = true -- determins if player can be controlled while in the air
+self.has_ground_control = true -- determins if player can be controlled while on the ground
+
+self.run_speed_max = 200 -- maximum ground speed, in px/s
+self.run_speed_acc = 20 -- acceleration speed when the player starts moving while on the ground, in px/s
+self.run_speed_dcc = 40 -- deceleration speed when the player stops moving while on the ground
+
+self.air_speed_max = 200 -- maximum horizontal air speed, in px/s
+self.air_speed_acc = 20 -- horizontal acceleration speed when the player starts moving while on the air, in px/s
+self.air_speed_dcc = 4 -- horizontal deceleration speed when the player stops moving while on the air, in px/s
+self.jump_boost = 400 -- initial vertical speed when the player jumps, in px/s
+self.jump_dcc = 20 -- the gravity applied while the player is jumping, in px/s
+self.jump_max_time = 300 -- the maximum time the player can be accending, in ms
+                         -- if, due to `jump_dcc`, the players vertical speed reaches 0
+                         -- before this time, they will enter the fall state before this time
+self.jump_min_time = 120 -- the minimum time the player can be accending, in ms
+self.jump_count_max = 1 -- how many times the player can jump without touching the ground
+self.jump_buffer_time = 300 -- how long should jump inputs be buffered, in ms
+self.apex_boost = 10 -- a small vertical boost when the player goes from the `JumpState`
+                     -- into the `FallState` to smooth out the arc, in px/s
+self.bump_max = 6 -- the maxium distand the player can be bumped, in px
+                  -- if the player hits the edge of a block while jumping, this allows them
+                  -- to be pushed aside and continue the jump
+
+self.fall_acc = 30 -- the gravity applied when the player is falling, in px/s
+self.fall_hang_acc = 20 -- a reduced gravity applied at the apex of a jump to allow for more precision platforming, in px/s
+self.fall_hang_time = 100 -- the time the reduced gravity is applied for, is ms
+self.fall_max = 400 -- the maximum fall speed, in px/s
+self.coyote_time = 120 -- the amount of time after the player walks off a platform where the jump button will still work, in ms
 ```
 
 # API
@@ -149,7 +183,7 @@ Sub class this class to create your platformer character.
 
 initalises the state machine like this:
 
-```
+```lua
 self.sm:addState("idle", IdleState(self, images.idle, options.idle))
 self.sm:addState("run", RunState(self, images.run, options.run))
 self.sm:addState("jump", JumpState(self, images.jump, options.jump))
