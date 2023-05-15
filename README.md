@@ -1,6 +1,6 @@
 # pp-lib
 
-The Playdate-Platformer Library is a library to make creating a platformer game for the playdate easy, while including all the things that make jumping feel good.
+The Playdate-Platformer Library is a comprehensive library that simplifies the process of creating platformer games for the Playdate. It includes all the necessary components to ensure smooth and satisfying jumping mechanics.
 
 - [Install](#install)
 - [QuickStart](#quick-start)
@@ -24,7 +24,7 @@ The Playdate-Platformer Library is a library to make creating a platformer game 
 
 # Install
 
-copy `pp-lib.lua` into your game directory and import it into your game, `import "pp-lib"`
+To install the Playdate-Platformer Library, simply copy the pp-lib.lua file into your game directory and import it into your game using the following code: import "pp-lib"
 
 # Quick Start
 
@@ -89,7 +89,10 @@ end
 
 ```
 
-Here are all the available paramaters you can set on your platformer character
+The above code demonstrates how to use the Playdate-Platformer Library to create a platformer game for the Playdate.
+For a more detailed description of available parameters and functionalities, please refer to the API section below.
+
+Below are the available parameters that you can customize for your platformer character:
 
 ```lua
 self.has_air_control = true -- determins if player can be controlled while in the air
