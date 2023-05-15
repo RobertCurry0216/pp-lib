@@ -2,6 +2,26 @@
 
 The Playdate-Platformer Library is a library to make creating a platformer game for the playdate easy, while including all the things that make jumping feel good.
 
+- [Install](#install)
+- [QuickStart](#quick-start)
+- [Api](#api)
+  - [Actor](#Actor)
+  - [Solid](#Solid)
+  - [Trigger](#Trigger)
+  - [DefaultPlatformer](#DefaultPlatformer)
+  - [BasePlatformer](#BasePlatformer)
+  - [InputHandler](#InputHandler)
+  - [Machine](#Machine)
+  - [State](#State)
+    - [BaseState](#basestate)
+    - [GroundState](#Groundstate)
+    - [AirState](#Airstate)
+    - [IdleState](#Idlestate)
+    - [RunState](#Runstate)
+    - [JumpState](#Jumpstate)
+    - [FallState](#FallState)
+  - [AnimatedImage](#animatedimage)
+
 # Install
 
 copy `pp-lib.lua` into your game directory and import it into your game, `import "pp-lib"`
@@ -125,7 +145,7 @@ calls `self:remove()`
 
 ## Solid
 
-extends `Actor`
+extends [Actor](#Actor)
 
 extend this class to create blocks/platforms that you want you player to be able to stand on.
 
@@ -147,7 +167,7 @@ utility function to add an invisible solid to the game
 
 ## Trigger
 
-extends `Actor`
+extends [Actor](#Actor)
 
 a catch all class for everything that interacts with the player but doesn't stop them, eg: pickups, coins, spikes, enemies, etc.
 
@@ -166,7 +186,7 @@ to be overridden, is called when this object overlaps with the player
 
 ## DefaultPlatformer
 
-extends `BasePlatformer`
+extends [BasePlatformer](#BasePlatformer)
 A good starting place for most platformers, sets up sensible defaults for all values and sets up the state machine.
 Sub class this class to create your platformer character.
 
@@ -250,7 +270,7 @@ self.coyote_time = 120 -- the amount of time after the player walks off a platfo
 
 ## BasePlatformer
 
-extends `Actor`
+extends [Actor](#Actor)
 
 A bare bone starting point for a platformer. Initalises the statemachine but does not add any states or events.
 Does not initalise any parameters.
@@ -336,7 +356,7 @@ event is a table with the values:
 - `from`: either a string or a list of strings, the states this event can be triggered from. If this event is triggered while the current state isn't part of this list, nothing happens. `'*'` may be used to allow the event from all states.
 - `to`: either a string, the name of the state to enter, or a function that returns the name of the state to enter. The function is passed the args `{[Machine], [event name], [from]}`
 
-### `addCallback([name], [callback])`
+### `Machine:addCallback([name], [callback])`
 
 adds a callback function to be on or before a given event
 
@@ -361,19 +381,19 @@ the empty state class
 
 ## BaseState
 
-extends `State`
+extends [State](#State)
 
 extend from this class to create new states for your platformer. Handles updating the spite image.
 
 ### `BaseState:init(actor, images, options)`
 
-- `actor`: a `BasePlatformer`
+- `actor`: a [BasePlatformer](#BasePlatformer)
 - `images`: either a image or an imagetable
-- `options`: `AnimatedImage` options
+- `options`: [AnimatedImage](#AnimatedImage) options
 
 ### `BaseState:onenter(sm, name, from, to)`
 
-- `sm`: the state `Machine`
+- `sm`: the state [Machine](#machine)
 - `name`: the event name string
 - `from`: the class name string of the state coming from
 - `to`: the class name string of the state going to
@@ -393,7 +413,7 @@ called every frame when this is the current state
 
 ## GroundState
 
-extends `BaseState`
+extends [BaseState](#BaseState)
 
 handles jumping and checking if the player should fall
 
@@ -401,7 +421,7 @@ handles jumping and checking if the player should fall
 
 ## AirState
 
-extends `BaseState`
+extends [BaseState](#BaseState)
 
 handles horizontal movement while in the air
 
@@ -409,7 +429,7 @@ handles horizontal movement while in the air
 
 ## IdleState
 
-extends `GroundState`
+extends [GroundState](#GroundState)
 
 handles deceleration when the player stops, otherwise just sits there
 
@@ -417,7 +437,7 @@ handles deceleration when the player stops, otherwise just sits there
 
 ## RunState
 
-extends `GroundState`
+extends [GroundState](#GroundState)
 
 handles horozontal movement while on the ground
 
@@ -425,7 +445,7 @@ handles horozontal movement while on the ground
 
 ## JumpState
 
-extends `AirState`
+extends [AirState](#AirState)
 
 handles the vertical movement while in the accending portion of a jump, also handles the edge bumping behaviour
 
@@ -433,7 +453,7 @@ handles the vertical movement while in the accending portion of a jump, also han
 
 ## FallState
 
-extends `AirState`
+extends [AirState](#AirState)
 
 handles the vertical movement while in the decending portion of a jump, also handles the coyote time when running of a solid
 
