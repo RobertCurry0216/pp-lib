@@ -11,13 +11,13 @@ def concatenate_files(input_file, output_file):
     with open(output_file, "w+") as output:
         for file_path in file_paths:
             with open(file_path, "r") as file:
-                output.write(f"-- {file_path}\n")
+                output.write(f"-- {file_path}{'-'*50}\n")
                 output.write(file.read())
-                output.write("\n")
+                output.write("\n\n")
 
 
-input_file = "./source/pp-engine.lua"  # Path to the file containing list of file paths
-output_file = "./pp-engine.lua"  # Path to the output file
+input_file = "./source/pp-lib.lua"  # Path to the file containing list of file paths
+output_file = "./pp-lib.lua"  # Path to the output file
 
 if __name__ == "__main__":
     concatenate_files(input_file, output_file)

@@ -1,4 +1,8 @@
+include .env
+
+SOURCE_1 := ./source
+
 build:
-	python ./build.py
+	$(PYTHON) ./build.py
 
 .PHONY: build
