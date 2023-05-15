@@ -315,7 +315,7 @@ end
 -- source/solid.lua--------------------------------------------------
 class("Solid").extends(Actor)
 
-function Solid:init(x, y)
+function Solid:init()
   Solid.super.init(self)
   self.mask = 0x1111
   self:setGroups({Group.solid})
@@ -387,7 +387,7 @@ function Trigger:init()
 end
 
 
-function Trigger:perform() end
+function Trigger:perform(actor, col) end
 
 -- source/basePlatformer.lua--------------------------------------------------
 class("BasePlatformer").extends(Actor)

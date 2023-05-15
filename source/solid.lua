@@ -1,6 +1,6 @@
 class("Solid").extends(Actor)
 
-function Solid:init(x, y)
+function Solid:init()
   Solid.super.init(self)
   self.mask = 0x1111
   self:setGroups({Group.solid})

@@ -6,4 +6,4 @@ function Trigger:init()
 end
 
 
-function Trigger:perform() end
+function Trigger:perform(actor, col) end
