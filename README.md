@@ -1,4 +1,5 @@
 # pp-lib
+[![Toybox Compatible](https://img.shields.io/badge/toybox.py-compatible-brightgreen)](https://toyboxpy.io)
 
 The Playdate-Platformer Library is a comprehensive library that simplifies the process of creating platformer games for the Playdate. It includes all the necessary components to ensure smooth and satisfying jumping mechanics.
 
@@ -24,7 +25,24 @@ The Playdate-Platformer Library is a comprehensive library that simplifies the p
 
 # Install
 
-To install the Playdate-Platformer Library, simply copy the pp-lib.lua file into your game directory and import it into your game using the following code: import "pp-lib"
+### Toybox
+You can add it to your Playdate project by installing toybox.py, going to your project folder in a Terminal window and typing:
+
+```lua
+toybox add pplib
+toybox update
+```
+Then, if your code is in the source folder, just import the following:
+
+```lua
+import '../toyboxes/toyboxes.lua'
+```
+
+### Manual instal
+To install the Playdate-Platformer Library, simply copy the pp-lib.lua file into your game directory and import it into your game.
+```lua
+import "pp-lib"
+```
 
 # Quick Start
 
