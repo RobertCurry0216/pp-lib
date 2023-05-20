@@ -29,16 +29,31 @@ function JumpState:aftermove(cols, l, tx, ty)
   local actor = self.actor
   if l ~= 0 then
     table.each(cols, function(c)
-      if c.other:isa(Solid)
-      and c.other:stops(actor, c)
+      local other = c.other
+      if other:isa(Solid)
+      and other:stops(actor, c)
       then
         if c.normal.y > 0 then
           -- bump
-          local bump = self:bump(actor, c.other, tx, ty)
+          local bump = self:bump(actor, other, tx, ty)
+
           if bump == 0 then
             actor.sm:fall(actor.apex_boost)
           else
-            actor:moveTo(tx+bump, ty)
+            local _, _, checks, l = actor:checkCollisions(tx+bump, ty)
+            local open = true
+            if l ~= 0 then
+              table.each(checks, function(cc)
+                if cc.other:isa(Solid) and cc.other ~= other then
+                  open = false
+                end
+              end)
+            end
+            if open then
+              actor:moveBy(bump, 0)
+            else
+              actor.sm:fall(actor.apex_boost)
+            end
           end
         end
       end
