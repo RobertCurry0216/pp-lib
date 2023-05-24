@@ -10,7 +10,6 @@ import "CoreLibs/timer"
 
 -- utilities
 import "lib/enum"
-import "lib/pp-lib"
 
 -- assets
 _image_player_idle = gfx.imagetable.new("images/idle")

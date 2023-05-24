@@ -285,7 +285,7 @@ Side = {
   left=0x0010,
   right=0x0001,
 }
--- source/inputHandlers.lua--------------------------------------------------
+-- source/inputHandler.lua--------------------------------------------------
 class("InputHandler").extends()
 
 function InputHandler:init()
@@ -309,7 +309,7 @@ function InputHandler:update(buttons, actor)
   end
 
   local time_since_jump = playdate.getCurrentTimeMilliseconds() - self._jump_last_pressed
-  self.jump_buffered = time_since_jump < actor.jump_buffer_time
+  self.jump_buffered = time_since_jump < (actor.jump_buffer_time or 0)
 
   self.dx = (self._right and 1 or 0) - (self._left and 1 or 0)
 end
@@ -441,9 +441,9 @@ end
 
 function BasePlatformer:updateImageFlip()
   -- set image flip
-  if self.dx < 0 then
+  if self.inputs.dx < 0 then
     self._image_flip = playdate.graphics.kImageFlippedX
-  elseif self.dx > 0 then
+  elseif self.inputs.dx > 0 then
     self._image_flip = playdate.graphics.kImageUnflipped
   end
   self:setImageFlip(self._image_flip)
@@ -759,16 +759,31 @@ function JumpState:aftermove(cols, l, tx, ty)
   local actor = self.actor
   if l ~= 0 then
     table.each(cols, function(c)
-      if c.other:isa(Solid)
-      and c.other:stops(actor, c)
+      local other = c.other
+      if other:isa(Solid)
+      and other:stops(actor, c)
       then
         if c.normal.y > 0 then
           -- bump
-          local bump = self:bump(actor, c.other, tx, ty)
+          local bump = self:bump(actor, other, tx, ty)
+
           if bump == 0 then
             actor.sm:fall(actor.apex_boost)
           else
-            actor:moveTo(tx+bump, ty)
+            local _, _, checks, l = actor:checkCollisions(tx+bump, ty)
+            local open = true
+            if l ~= 0 then
+              table.each(checks, function(cc)
+                if cc.other:isa(Solid) and cc.other ~= other then
+                  open = false
+                end
+              end)
+            end
+            if open then
+              actor:moveBy(bump, 0)
+            else
+              actor.sm:fall(actor.apex_boost)
+            end
           end
         end
       end
