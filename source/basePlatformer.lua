@@ -36,9 +36,9 @@ end
 
 function BasePlatformer:updateImageFlip()
   -- set image flip
-  if self.dx < 0 then
+  if self.inputs.dx < 0 then
     self._image_flip = playdate.graphics.kImageFlippedX
-  elseif self.dx > 0 then
+  elseif self.inputs.dx > 0 then
     self._image_flip = playdate.graphics.kImageUnflipped
   end
   self:setImageFlip(self._image_flip)

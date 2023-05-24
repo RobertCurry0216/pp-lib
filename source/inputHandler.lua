@@ -10,7 +10,7 @@ function InputHandler:init()
   self.jump_buffered = false
 end
 
-function InputHandler:update(actor, buttons)
+function InputHandler:update(buttons, actor)
   self._left=playdate.buttonIsPressed(buttons.left)
   self._right=playdate.buttonIsPressed(buttons.right)
   self.jump=playdate.buttonIsPressed(buttons.jump)

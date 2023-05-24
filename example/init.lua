@@ -1,5 +1,7 @@
 local gfx <const> = playdate.graphics
 
+import "../pp-lib.lua"
+
 -- playdate libs
 import "CoreLibs/object"
 import "CoreLibs/graphics"
