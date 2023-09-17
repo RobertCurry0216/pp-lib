@@ -373,11 +373,15 @@ function Solid:resolveCollision(actor, col)
   local ax, ay, aw, ah = actor:getBounds()
   local tx, ty = col.touch.x, col.touch.y
   local cx, cy = self:getCenter()
+  local acx, acy = actor:getCenter()
 
-  local horiz = col.normal.x == 0 and 0 or 1
-  local vert = col.normal.y == 0 and 0 or 1
+  local move_horiz = col.normal.x == 0 and 0 or 1
+  local move_vert = col.normal.y == 0 and 0 or 1
 
-  actor:moveBy((tx-ax-bx-(self.width*cx))*horiz, (ty-ay-by-(self.height*cy))*vert)
+  local dx = (tx-ax-bx-(self.width*cx)-(actor.width*acx))*move_horiz
+  local dy = (ty-ay-by-(self.height*cy)-(actor.height*acy))*move_vert
+
+  actor:moveBy(dx, dy)
 end
 
 
