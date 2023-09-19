@@ -5,6 +5,7 @@ The Playdate-Platformer Library is a comprehensive library that simplifies the p
 
 - [Install](#install)
 - [QuickStart](#quick-start)
+- [Examples](#examples)
 - [Api](#api)
   - [Actor](#Actor)
   - [Solid](#Solid)
@@ -143,6 +144,16 @@ self.fall_hang_time = 100 -- the time the reduced gravity is applied for, is ms
 self.fall_max = 400 -- the maximum fall speed, in px/s
 self.coyote_time = 120 -- the amount of time after the player walks off a platform where the jump button will still work, in ms
 ```
+
+# Examples
+
+- [Basic platformer](examples/1_basic_platformer/README.md)
+- [Adding a pickup](examples/2_pickups/README.md)
+- [Adding an enemy](examples/3_enemies/README.md)
+- [Adding a new state](examples/4_adding_new_states/README.md)
+- [Overriding default states - todo]()
+- [using LDtk - todo]()
+- [Custom input handler - todo]()
 
 # API
 
