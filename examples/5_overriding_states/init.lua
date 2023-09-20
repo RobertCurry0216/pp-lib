@@ -28,6 +28,7 @@ import "actors/snake"
 -- player
 import "player/player"
 import "player/deadState"
+import "player/hoverState"
 
 -- globals
 ZIndex = enum({
