@@ -151,7 +151,7 @@ self.coyote_time = 120 -- the amount of time after the player walks off a platfo
 - [Adding a pickup](examples/2_pickups/README.md)
 - [Adding an enemy](examples/3_enemies/README.md)
 - [Adding a new state](examples/4_adding_new_states/README.md)
-- [Overriding default states - todo]()
+- [Overriding default states](examples/5_overriding_states/README.md)
 - [using LDtk - todo]()
 - [Custom input handler - todo]()
 - [Super Date Box - Large example](https://github.com/RobertCurry0216/super-date-box)
