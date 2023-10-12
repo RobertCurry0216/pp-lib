@@ -2,19 +2,39 @@ import "init"
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
+LDtk.load("levels/world.ldtk")
 
 deltaTime = 1 / playdate.display.getRefreshRate()
 
-local function init()
-	Player(50, 50)
+function loadLevel(levelName)
+	local layers = LDtk.get_layers(levelName)
+	for layerName, layer in pairs(layers) do
+		if layer.tiles then
+			local tilemap = LDtk.create_tilemap(levelName, layerName)
 
-	-- blocks
-	for i=1,12,1 do
-		Block(8+(i-1)*16, 80)
+			local layerSprite = gfx.sprite.new()
+			layerSprite:setTilemap(tilemap)
+			layerSprite:moveTo(0, 0)
+			layerSprite:setCenter(0, 0)
+			layerSprite:setZIndex(ZIndex.background - 3 + layer.zIndex)
+			layerSprite:setUpdatesEnabled(false)
+			layerSprite:add()
+
+			Solid.addWallSprites(tilemap, LDtk.get_empty_tileIDs(levelName, "Solid", layerName))
+
+			local passable = Solid.addWallSprites(tilemap, LDtk.get_empty_tileIDs(levelName, "Passthrough", layerName))
+			for _, s in ipairs(passable) do
+				s.mask = Side.top
+			end
+		end
 	end
-	for i=1,12,1 do
-		Block(392-(i-1)*16, 160)
-	end
+end
+
+local function init()
+	-- ldtk
+	loadLevel("Level_0")
+
+	Player(200, 50)
 
 	-- walls
 	Solid.addEmptyCollisionSprite(0, -10, 400, 11)

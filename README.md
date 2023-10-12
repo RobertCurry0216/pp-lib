@@ -196,6 +196,18 @@ sets its group to `{Group.solid}`
 
 utility function to add an invisible solid to the game
 
+### `Solid.addWallSprites(tilemap, emptyTiles)`
+
+utility function to make working with PlaydateLDtkImporter easier. Works very similar to `playdate.graphics.sprite.addWallSprites`.
+Will return a list of the created sprites.
+
+```lua
+local passable = Solid.addWallSprites(tilemap, LDtk.get_empty_tileIDs(levelName, "Passthrough", layerName))
+for _, s in ipairs(passable) do
+  s.mask = Side.top
+end
+```
+
 ---
 
 ## Trigger

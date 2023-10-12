@@ -1,70 +1,55 @@
-# BASIC PLATFORMER
+# Using LDtk with pp-lib
 
-## Creating the player
+First off I'll say this isn't intended to be an instruction manual for LDtk or PlaydateLDtkImporter. This is just a guide for integrating LDtk with pp-lib.
+For using LDtk I recommend this [Youtube video](https://youtu.be/7GbUxjE9rRM?t=185) by Squidgoddev.
+For using PlaydateLDtkImporter I recommend reading its documentation on [Github](https://github.com/NicMagnier/PlaydateLDtkImporter).
 
-The simplest way to create a new platformer is to extend the `DefaultPlatformer` class
+## Prerequsites
+
+Make sure you have `PlaydateLDtkImporter` imported and a LDtk world saved in your project somewhere.
+
+## Loading a level
+
+First load in your world using LDtk:
 
 ```lua
-class("Player").extends(DefaultPlatformer)
+LDtk.load("levels/world.ldtk")
 ```
 
-Then in the init function set the images for each of the default states (idle, run, jump, fall). For each state you may provide either an `image`, `imagetable`, or an `AnimatedImage`.
-Also remember to set the collide rect too.
+Next we'll create a helper function for loadind specific levels.
 
 ```lua
-local w, h = _image_player_idle[1]:getSize()
+function loadLevel(levelName)
+	local layers = LDtk.get_layers(levelName)
+	for layerName, layer in pairs(layers) do
+		if layer.tiles then
+			local tilemap = LDtk.create_tilemap(levelName, layerName)
 
-local _images <const> = {
-  idle = _image_player_idle, -- imagetable
-  run = _image_player_run, -- imagetable
-  jump = _image_player_jump[1], -- image
-  fall = _image_player_jump[2] -- image
-}
+			local layerSprite = gfx.sprite.new()
+			layerSprite:setTilemap(tilemap)
+			layerSprite:moveTo(0, 0)
+			layerSprite:setCenter(0, 0)
+			layerSprite:setZIndex(ZIndex.background - 3 + layer.zIndex)
+			layerSprite:setUpdatesEnabled(false)
+			layerSprite:add()
 
-function Player:init(x, y)
-  Player.super.init(self, _images)
-  self:moveTo(x, y) -- setting the initial position
-  self:setZIndex(ZIndex.player)
-  self:setCollideRect(5, 0, w-10, h) -- set the collide rect
+			Solid.addWallSprites(tilemap, LDtk.get_empty_tileIDs(levelName, "Solid", layerName))
+
+			local passable = Solid.addWallSprites(tilemap, LDtk.get_empty_tileIDs(levelName, "Passthrough", layerName))
+			for _, s in ipairs(passable) do
+				s.mask = Side.top
+			end
+		end
+	end
 end
 ```
 
-This will give you a platformer character with sensible defaults for movement speed and jump height etc.
-These can (and should) be over-ridden to give your character it's own unique feel.
+This is all normal LDtk stuff. The one thing I want to focus on is the `Solid.addWallSprites` methods. This works basically the same as `playdate.graphics.sprite.addWallSprites` from the sdk with the exception of, it will return the sprites created. This allows to easily keep working on them. You can see I've done this to set the wall sprites to passthrough.
 
 ```lua
-function Player:init(x, y)
-  Player.super.init(self, _images)
-  self:moveTo(x, y) -- setting the initial position
-  self:setZIndex(ZIndex.player)
-  self:setCollideRect(5, 0, w-10, h) -- set the collide rect
-
-  -- overrides
-  self.jump_count_max = 2 -- double jump
-  self.jump_boost = 300 -- affects jump height
+local passable = Solid.addWallSprites(tilemap, LDtk.get_empty_tileIDs(levelName, "Passthrough", layerName))
+for _, s in ipairs(passable) do
+  s.mask = Side.top
 end
 ```
 
-## Creating simple blocks
-
-To create a block the player can stand on simply extend the `Solid` class
-
-```lua
-class("Block").extends(Solid)
-```
-
-`Solid` it's self extends the `Actor` class which in turn extend `sprite` so you treat it as a normal sprite.
-Just set the collide rect and add it to your game.
-
-```lua
-function Block:init(x, y)
-  Block.super.init(self)
-
-  self:setZIndex(ZIndex.solid)
-  self:setImage(_image_block)
-  self:moveTo(x, y)
-  self:setCollideRect(0,0, self:getSize())
-end
-```
-
-Have a look at [main.lua](examples/1_basic_platformer/main.lua) to see how this all works together

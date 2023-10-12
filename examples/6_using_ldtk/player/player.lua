@@ -17,6 +17,8 @@ function Player:init(x, y)
   self:setZIndex(ZIndex.player)
   self:setCollideRect(5, 0, w-10, h) -- set the collide rect
 
+  self.buttons.jump = "up"
+
   self.jump_count_max = 2 -- double jump
   self.jump_boost = 300 -- affects jump height
 end

@@ -43,5 +43,28 @@ function Player:init(x, y)
   self.jump_count_max = 2 -- double jump
   self.jump_boost = 300 -- affects jump height
 end
-
 ```
+
+## Creating simple blocks
+
+To create a block the player can stand on simply extend the `Solid` class
+
+```lua
+class("Block").extends(Solid)
+```
+
+`Solid` it's self extends the `Actor` class which in turn extend `sprite` so you treat it as a normal sprite.
+Just set the collide rect and add it to your game.
+
+```lua
+function Block:init(x, y)
+  Block.super.init(self)
+
+  self:setZIndex(ZIndex.solid)
+  self:setImage(_image_block)
+  self:moveTo(x, y)
+  self:setCollideRect(0,0, self:getSize())
+end
+```
+
+Have a look at [main.lua](examples/1_basic_platformer/main.lua) to see how this all works together
