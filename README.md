@@ -246,8 +246,7 @@ an enum used when initalizing a `FollowCamera`
     - `target_x_offset`: 200
     - `target_y_offset`: 120
     - `lerp`: 0.2
-
-![cam lock](/gifs/cam_lock.gif)
+  - ![cam lock](/gifs/cam_lock.gif)
 
 - `CameraMode.hlock`
   - keeps the horizontal position of the camera locked while allowing some more free movement in the vertical direction. Tends to be nicer for jumping as the camera jerks around less.
@@ -256,8 +255,7 @@ an enum used when initalizing a `FollowCamera`
     - `top`: 100
     - `bottom`: 180
     - `lerp`: 0.2
-
-![cam hlock](/gifs/cam_hlock.gif)
+  - ![cam hlock](/gifs/cam_hlock.gif)
 
 - `CameraMode.box`
   - keeps the player within a set zone in the screen, allows more free movement in both the horizontal and vertical directions.
@@ -267,8 +265,7 @@ an enum used when initalizing a `FollowCamera`
     - `left`: 150
     - `right`: 250
     - `lerp`: 0.2
-
-![cam box](/gifs/cam_box.gif)
+  - ![cam box](/gifs/cam_box.gif)
 
 - `CameraMode.look_ahead`
   - similar to `CameraMode.hlock` except it will shift the view to see further ahead of the direction the player is facing.
@@ -277,8 +274,7 @@ an enum used when initalizing a `FollowCamera`
     - `top`: 100
     - `bottom`: 180
     - `lerp`: 0.1
-
-![cam la](/gifs/cam_look_ahead.gif)
+  - ![cam la](/gifs/cam_look_ahead.gif)
 
 ### `FollowCamera:setTarget(target)`
 
