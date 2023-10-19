@@ -246,6 +246,7 @@ an enum used when initalizing a `FollowCamera`
     - `target_x_offset`: 200
     - `target_y_offset`: 120
     - `lerp`: 0.2
+
 ![cam lock](/gifs/cam_lock.gif)
 
 - `CameraMode.hlock`
@@ -255,6 +256,7 @@ an enum used when initalizing a `FollowCamera`
     - `top`: 100
     - `bottom`: 180
     - `lerp`: 0.2
+
 ![cam hlock](/gifs/cam_hlock.gif)
 
 - `CameraMode.box`
@@ -265,6 +267,7 @@ an enum used when initalizing a `FollowCamera`
     - `left`: 150
     - `right`: 250
     - `lerp`: 0.2
+
 ![cam box](/gifs/cam_box.gif)
 
 - `CameraMode.look_ahead`
@@ -274,6 +277,7 @@ an enum used when initalizing a `FollowCamera`
     - `top`: 100
     - `bottom`: 180
     - `lerp`: 0.1
+
 ![cam la](/gifs/cam_look_ahead.gif)
 
 ### `FollowCamera:setTarget(target)`
