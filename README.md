@@ -10,6 +10,7 @@ The Playdate-Platformer Library is a comprehensive library that simplifies the p
   - [Actor](#Actor)
   - [Solid](#Solid)
   - [Trigger](#Trigger)
+  - [FollowCamera](#FollowCamera)
   - [DefaultPlatformer](#DefaultPlatformer)
   - [BasePlatformer](#BasePlatformer)
   - [InputHandler](#InputHandler)
@@ -226,6 +227,86 @@ to be overridden, is called when this object overlaps with the player
 
 - `actor`: the player actor
 - `col`: the [collision object](https://sdk.play.date/1.13.7/#m-graphics.sprite.moveWithCollisions)
+
+---
+
+## FollowCamera
+
+an easy to use camera that will follow the platformer character around the level.
+
+### `FollowCamera:init([mode, [config]])`
+- `mode`: select how the camera will follow the player around. Either provide the mode using the `CameraMode` enum or a string value `"lock" | "hlock" | "box" | "look_ahead"`. Defaults to `"hlock"`
+- `config`: optional config to customise the follow mode.
+
+### `CameraMode`
+an enum used when initalizing a `FollowCamera`
+- `CameraMode.lock`
+  - keeps the camera locked onto the player
+  - config: all distances measured from the top left of the screen
+    - `target_x_offset`: 200
+    - `target_y_offset`: 120
+    - `lerp`: 0.2
+![cam lock](/gifs/cam_lock.gif)
+
+- `CameraMode.hlock`
+  - keeps the horizontal position of the camera locked while allowing some more free movement in the vertical direction. Tends to be nicer for jumping as the camera jerks around less.
+  - config: all distances measured from the top left of the screen
+    - `target_x_offset`: 200
+    - `top`: 100
+    - `bottom`: 180
+    - `lerp`: 0.2
+![cam hlock](/gifs/cam_hlock.gif)
+
+- `CameraMode.box`
+  - keeps the player within a set zone in the screen, allows more free movement in both the horizontal and vertical directions.
+  - config: all distances measured from the top left of the screen
+    - `top`: 100
+    - `bottom`: 180
+    - `left`: 150
+    - `right`: 250
+    - `lerp`: 0.2
+![cam box](/gifs/cam_box.gif)
+
+- `CameraMode.look_ahead`
+  - similar to `CameraMode.hlock` except it will shift the view to see further ahead of the direction the player is facing.
+  - config: all distances measured from the top left of the screen
+    - `look_distance`: 60
+    - `top`: 100
+    - `bottom`: 180
+    - `lerp`: 0.1
+![cam la](/gifs/cam_look_ahead.gif)
+
+### `FollowCamera:setTarget(target)`
+
+sets the target for the camera to follow
+
+### `FollowCamera:clearTarget()`
+
+removes the target. Remember to do this when removing the platformer from the game (dying for example) as `FollowCamera` keeps an internal ref to the target which may prevent it being cleaned up by the GC.
+
+### `FollowCamera:update()`
+
+updates the cameras position, call this in your game update function.
+
+### `FollowCamera:setBounds(rect or sprite)`
+
+sets the bounds to lock the camera to. If the bounds are set the camera cannot move past those bounds even if the target has moved out of those bounds.
+
+### `FollowCamera:shake(amount, [time])`
+
+Adds some nice juicy screen shake. Just call this once and the screen shake will decay over the provided time, if `time` is not provided `amount` will be used. `time` is in frames.
+
+you can just provide a large `amount` to get a burst of screen shake:
+```lua
+cam:shake(10)
+```
+![cam shake](/gifs/cam_shake.gif)
+
+or provide a low `amount` with a high `time` to get a sustained rumble
+```lua
+cam:shake(3, 60)
+```
+![cam rumble](/gifs/cam_rumble.gif)
 
 ---
 
