@@ -625,14 +625,16 @@ function Solid.addEmptyCollisionSprite(x, y, w, h)
   return solid
 end
 
-function Solid.addWallSprites(tilemap, emptyTiles) 
+function Solid.addWallSprites(tilemap, emptyTiles, offx, offy) 
+  offx = offx or 0
+  offy = offy or 0
   local sx, sy = tilemap:getTileSize()
   local colSprites = {}
   if emptyTiles then
     local colRecs = tilemap:getCollisionRects(emptyTiles)
     for _, rect in ipairs(colRecs) do
       local x, y, w, h = rect:unpack()
-      local s = Solid.addEmptyCollisionSprite(x*sx, math.max(y*sy, 1), w*sx, h*sy)
+      local s = Solid.addEmptyCollisionSprite(x*sx + offx, y*sy + offy, w*sx, h*sy)
       table.insert(colSprites, s)
     end
   end
