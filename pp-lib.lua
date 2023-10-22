@@ -513,7 +513,7 @@ function FollowCamera:clearTarget()
 end
 
 function FollowCamera:setBounds(bounds)
-  if bounds:isa(playdate.sprite) then
+  if type(bounds.getBoundsRect) == "function" then
     rect = bounds:getBoundsRect()
   else
     rect = bounds
