@@ -39,12 +39,13 @@ local _lock_config <const> = {
   lerp = 0.2
 }
 
-local function _lock(self)
+local function _lock(self, lerp_override)
   local target = self.target
   local config = self.config
+  local lerp = lerp_override or config.lerp
   if target then
-    self.offset_x += (target.x - config.target_x_offset - self.offset_x) * config.lerp
-    self.offset_y += (target.y - config.target_y_offset - self.offset_y) * config.lerp
+    self.offset_x += (target.x - config.target_x_offset - self.offset_x) * lerp
+    self.offset_y += (target.y - config.target_y_offset - self.offset_y) * lerp
     return -self.offset_x, -self.offset_y
   end
   return -self.offset_x, -self.offset_y
@@ -60,38 +61,39 @@ local _box_config <const> = {
   lerp = 0.2
 }
 
-local function _constrain_x(cam, left, right)
+local function _constrain_x(cam, left, right, lerp)
   local target = cam.target
   local config = cam.config
   if target then
     if target.x < left then
-      cam.offset_x += (target.x - left) * config.lerp
+      cam.offset_x += (target.x - left) * lerp
     elseif target.x > right then
-      cam.offset_x += (target.x - right) * config.lerp
+      cam.offset_x += (target.x - right) * lerp
     end
   end
   return cam.offset_x
 end
 
-local function _constrain_y(cam, top, bottom)
+local function _constrain_y(cam, top, bottom, lerp)
   local target = cam.target
   local config = cam.config
   if target then
     if target.y < top then
-      cam.offset_y += (target.y - top) * config.lerp
+      cam.offset_y += (target.y - top) * lerp
     elseif target.y > bottom then
-      cam.offset_y += (target.y - bottom) * config.lerp
+      cam.offset_y += (target.y - bottom) * lerp
     end
   end
   return cam.offset_y
 end
 
-local function _box(self)
+local function _box(self, lerp_override)
   local target = self.target
   local config = self.config
+  local lerp = lerp_override or config.lerp
   if target then
-    self.offset_x = _constrain_x(self, self.offset_x + config.left, self.offset_x + config.right)
-    self.offset_y = _constrain_y(self, self.offset_y + config.top, self.offset_y + config.bottom)
+    self.offset_x = _constrain_x(self, self.offset_x + config.left, self.offset_x + config.right, lerp)
+    self.offset_y = _constrain_y(self, self.offset_y + config.top, self.offset_y + config.bottom, lerp)
   end
   return -self.offset_x, -self.offset_y
 end
@@ -104,12 +106,13 @@ local _hlock_config <const> = {
   lerp = 0.2
 }
 
-local function _hlock(self)
+local function _hlock(self, lerp_override)
   local target = self.target
   local config = self.config
+  local lerp = lerp_override or config.lerp
   if target then
-    self.offset_x += (target.x - config.target_x_offset - self.offset_x) * config.lerp
-    self.offset_y = _constrain_y(self, self.offset_y + config.top, self.offset_y + config.bottom)
+    self.offset_x += (target.x - config.target_x_offset - self.offset_x) * lerp
+    self.offset_y = _constrain_y(self, self.offset_y + config.top, self.offset_y + config.bottom, lerp)
     return -self.offset_x, -self.offset_y
   end
   return -self.offset_x, -self.offset_y
@@ -124,16 +127,17 @@ local _lookahead_config <const> = {
   lerp = 0.1
 }
 
-local function _lookahead(self)
+local function _lookahead(self, lerp_override)
   local target = self.target
   local config = self.config
+  local lerp = lerp_override or config.lerp
   if target then
     local look = config.look_distance
     if target._image_flip ~= playdate.graphics.kImageUnflipped then
       look = look * -1
     end
-    self.offset_x += (target.x - center_x + look - self.offset_x) * config.lerp
-    self.offset_y = _constrain_y(self, self.offset_y + config.top, self.offset_y + config.bottom)
+    self.offset_x += (target.x - center_x + look - self.offset_x) * lerp
+    self.offset_y = _constrain_y(self, self.offset_y + config.top, self.offset_y + config.bottom, lerp)
     return -self.offset_x, -self.offset_y
   end
   return -self.offset_x, -self.offset_y
@@ -163,7 +167,12 @@ function FollowCamera:init(mode, config)
   self._shake_time = 0
 
   -- config
+  self:setMode(mode)
+end
+
+function FollowCamera:setMode(mode)
   mode = mode or CameraMode.hlock
+  self.mode = mode
   if mode == CameraMode.lock then
     self._updateFollow = _lock
     self.config = merge_configs(_lock_config, config or {})
@@ -187,8 +196,12 @@ function FollowCamera:shake(amount, time)
   self._shake_decay = self._shake_amount / self._shake_time
 end
 
-function FollowCamera:setTarget(target)
+function FollowCamera:setTarget(target, ignore_snap)
   self.target = target
+  if ignore_snap == true then return end
+
+  -- snap camera to player
+  self:_updateFollow(1)
 end
 
 function FollowCamera:clearTarget()
