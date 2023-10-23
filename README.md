@@ -276,9 +276,9 @@ an enum used when initalizing a `FollowCamera`
     - `lerp`: 0.1
   - ![cam la](/gifs/cam_look_ahead.gif)
 
-### `FollowCamera:setTarget(target)`
+### `FollowCamera:setTarget(target, ignore_snap)`
 
-sets the target for the camera to follow
+sets the target for the camera to follow. By default the camera will instantly snap to the target, you can ignore this behavior by passing true into `ignore_snap`
 
 ### `FollowCamera:clearTarget()`
 
