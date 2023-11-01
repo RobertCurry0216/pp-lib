@@ -6,6 +6,7 @@ The Playdate-Platformer Library is a comprehensive library that simplifies the p
 - [Install](#install)
 - [QuickStart](#quick-start)
 - [Examples](#examples)
+- [Games made with PP-Lib](#Games-made-with-PP-Lib)
 - [Api](#api)
   - [Actor](#Actor)
   - [Solid](#Solid)
@@ -156,6 +157,12 @@ self.coyote_time = 120 -- the amount of time after the player walks off a platfo
 - [using LDtk](examples/6_using_ldtk/README.md)
 - [Custom input handler - todo]()
 - [Super Date Box - Large example](https://github.com/RobertCurry0216/super-date-box)
+
+# Games made with PP-Lib
+
+[Suddenly Bird](https://fevgames.itch.io/suddenly-bird)
+
+![suddenly bird](gifs/game_suddenly_bird.gif)
 
 # API
 
