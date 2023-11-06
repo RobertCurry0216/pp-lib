@@ -37,18 +37,18 @@ function AnimatedImage.new(image_table_path, options)
 		end
 		image_table = sequence_image_table
 	end
-	
+
 	local animation_loop = animation.loop.new(options.delay or 100, image_table, options.loop and true or false)
 	animation_loop.paused = options.paused and true or false
 	animation_loop.startFrame = options.first or 1
 	animation_loop.endFrame = options.last or image_table:getLength()
 	animation_loop.step = options.step or 1
-	
+
 	local animated_image = {}
 	setmetatable(animated_image, AnimatedImage)
 	animated_image.image_table = image_table
 	animated_image.loop = animation_loop
-	
+
 	return animated_image
 end
 
@@ -198,7 +198,7 @@ function Machine:init(options)
   for _, event in ipairs(options.events or {}) do
     self:addEvent(event)
   end
-  
+
   for name, callback in pairs(options.callbacks or {}) do
     self:addCallback(callback)
   end
@@ -484,10 +484,10 @@ function FollowCamera:init(mode, config)
   self._shake_time = 0
 
   -- config
-  self:setMode(mode)
+  self:setMode(mode, config)
 end
 
-function FollowCamera:setMode(mode)
+function FollowCamera:setMode(mode, config)
   mode = mode or CameraMode.hlock
   self.mode = mode
   if mode == CameraMode.lock then
@@ -638,7 +638,7 @@ function Solid.addEmptyCollisionSprite(x, y, w, h)
   return solid
 end
 
-function Solid.addWallSprites(tilemap, emptyTiles, offx, offy) 
+function Solid.addWallSprites(tilemap, emptyTiles, offx, offy)
   offx = offx or 0
   offy = offy or 0
   local sx, sy = tilemap:getTileSize()
@@ -672,7 +672,7 @@ local deltaTime <const> = 1 / playdate.display.getRefreshRate()
 
 function BasePlatformer:init()
   BasePlatformer.super.init(self)
-  
+
   self:setCollideRect(0,0, 32, 32)
   self:setGroups({Group.actor})
   self:setCollidesWithGroups({
@@ -692,7 +692,7 @@ function BasePlatformer:init()
   self.dx = 0
   self.dy = 0
   self.buttons = {}
-  
+
 end
 
 function BasePlatformer:update()
@@ -905,7 +905,7 @@ class("AirState").extends(BaseState)
 function AirState:update(inputs)
   AirState.super.update(self)
   local actor = self.actor
-  
+
   if not actor.has_air_control then return end
 
   local dx = inputs.dx
@@ -1124,4 +1124,3 @@ function FallState:aftermove(cols, l, tx, ty)
     end)
   end
 end
-

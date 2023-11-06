@@ -167,10 +167,10 @@ function FollowCamera:init(mode, config)
   self._shake_time = 0
 
   -- config
-  self:setMode(mode)
+  self:setMode(mode, config)
 end
 
-function FollowCamera:setMode(mode)
+function FollowCamera:setMode(mode, config)
   mode = mode or CameraMode.hlock
   self.mode = mode
   if mode == CameraMode.lock then
