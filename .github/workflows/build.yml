@@ -1,0 +1,35 @@
+name: Build and Commit on Merge to Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: true  # Allows the push command
+          fetch-depth: 0             # Fetch all history for all tags and branches
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      # If you have any dependencies
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run build script
+        run: python build.py
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Automated build commit" -a || echo "No changes to commit"
+          git push
